@@ -8,23 +8,22 @@ from fastapi.security import OAuth2PasswordRequestForm
 import requests
 from .models import User
 from .validators import CreateUserRequest, GoogleUser, Token, RefreshTokenRequest
-
 from .services import create_access_token, authenticate_user, bcrypt_context, create_refresh_token, \
     create_user_from_google_info, get_user_by_google_sub, token_expired, decode_token, user_dependency
 from ...db.database import db_dependency
 from .services import oauth
 from fastapi import Request
 from fastapi.responses import RedirectResponse
-
+import os
 router = APIRouter(
     prefix='/auth',
     tags=['auth']
 )
 
-GOOGLE_CLIENT_ID = "969709362942-oqoriveq3lumcs940jio55uj54uet39u.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET = "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"
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 GOOGLE_REDIRECT_URI = "http://localhost/auth/callback/google"
-FRONTEND_URL = "http://localhost:3000"
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 
 @router.get("/google")
