@@ -22,7 +22,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,
+    allow_credentials=True, 
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -30,7 +30,6 @@ app.add_middleware(
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 app.include_router(auth_router)
-
 
 auth_models.Base.metadata.create_all(bind=engine)
 
@@ -45,8 +44,7 @@ async def user(user: user_dependency, db: db_dependency):
 
 
 @app.get("/test", status_code=status.HTTP_200_OK)
-async def test():
-    print(os.getenv("SECRET_KEY"))
+async def test(db: db_dependency):
     return "test"
 
 

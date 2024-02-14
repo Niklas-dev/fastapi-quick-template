@@ -7,7 +7,6 @@ from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session, defer
 from authlib.integrations.starlette_client import OAuth
-from authlib.integrations.starlette_client import OAuthError
 import os
 from jose import jwt, JWTError
 from starlette.config import Config
@@ -104,7 +103,6 @@ def get_user_by_google_sub(google_sub: int, db: Session):
 def create_user_from_google_info(google_user: GoogleUser, db: Session):
     google_sub = google_user.sub
     email = google_user.email
-    name = google_user.name
 
     existing_user = db.query(User).filter(User.email == email).first()
 
