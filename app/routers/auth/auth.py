@@ -5,7 +5,6 @@ from datetime import timedelta
 from typing import Annotated
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm
-import requests
 from .models import User
 from .validators import CreateUserRequest, GoogleUser, Token, RefreshTokenRequest
 from .services import create_access_token, authenticate_user, bcrypt_context, create_refresh_token, \
@@ -15,6 +14,7 @@ from .services import oauth
 from fastapi import Request
 from fastapi.responses import RedirectResponse
 import os
+
 router = APIRouter(
     prefix='/auth',
     tags=['auth']
@@ -98,9 +98,8 @@ async def refresh_access_token(db: db_dependency, refresh_token_request: Refresh
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token is expired.")
 
     user = decode_token(token)
-    print(f"Refreshed token for {user.username}")
 
-    access_token = create_access_token(user.username, user.id, timedelta(days=7))
-    refresh_token = create_refresh_token(user.username, user.id, timedelta(days=14))
+    access_token = create_access_token(user["sub"], user["id"], timedelta(days=7))
+    refresh_token = create_refresh_token(user["sub"], user["id"], timedelta(days=14))
 
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}

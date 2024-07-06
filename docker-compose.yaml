@@ -1,0 +1,36 @@
+########################################################
+# creates postgres sql database image and pgadmin4 image
+# login db: postgres:postgres hostname: postgres
+# login pgadmin: admin@developer-blog.net:admin port 5555
+########################################################
+version: "1"
+services:
+  postgres:
+    image: postgres
+    container_name: fastapi-quick-template-postgres
+
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastapi-quick-template
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: template-pgadmin
+    depends_on:
+      - postgres
+    ports:
+      - 5555:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+
